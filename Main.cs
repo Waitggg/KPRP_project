@@ -13,11 +13,11 @@ class Program
             team.name = "MIT";
             team.RegNumber = 223;
             team.Info = TimeFrame.TwoYears;
-            Console.WriteLine(team.ToString());
+            Console.WriteLine(team);
 
-            Console.WriteLine(team.ToString());
+            Console.WriteLine(team);
             team.AddPapers(new Paper("Paper1", new Person(), DateTime.Now));
-            Console.WriteLine(team.ToString());
+            Console.WriteLine(team);
             Console.WriteLine(team.LatestPaper);
 
             const int SIZE = 100;
@@ -55,4 +55,5 @@ class Program
             }
             Console.WriteLine($"ступенчатый 2D массив: {Environment.TickCount - startTime3} мс");
         }
+
     }
