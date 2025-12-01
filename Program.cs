@@ -1,151 +1,107 @@
+﻿using ConsoleApp1;
 using System;
+using System.Drawing;
 using System.Linq;
 
-    public class Person
+ResearchTeam team = new ResearchTeam();
+   Console.WriteLine(team.ToShortString());
+
+            Console.WriteLine($"Year: {team[TimeFrame.Year]}");
+            Console.WriteLine($"TwoYears: {team[TimeFrame.TwoYears]}");
+            Console.WriteLine($"Long: {team[TimeFrame.Long]}");
+            
+            team.title = "Research";
+            team.name = "MIT";
+            team.RegNumber = 223;
+            team.Info = TimeFrame.TwoYears;
+            Console.WriteLine(team);
+
+            Console.WriteLine(team);
+            team.AddPapers(new Paper("Paper1", new Person(), DateTime.Now));
+            Console.WriteLine(team);
+            Console.WriteLine(team.LatestPaper);
+
+            const int SIZE = 100;
+
+    int startTime = Environment.TickCount;
+    Paper[] oneDimensionalArray = new Paper[SIZE];
+            for (int i = 0; i<SIZE; i++)
+            {
+                oneDimensionalArray[i] = new Paper($"Paper{i}", new Person(), DateTime.Now.AddDays(i));
+            }
+Console.WriteLine($"одномерный массив: {Environment.TickCount - startTime} мс");
+
+int startTime2 = Environment.TickCount;
+const int ROWS = 10;
+const int COLS = 10;
+Paper[,] twoDimensionalRectArray = new Paper[ROWS, COLS];
+for (int i = 0; i < ROWS; i++)
+{
+    for (int j = 0; j < COLS; j++)
     {
-        string name;
-        string surname;
-        DateTime dateOfBirth;
+        twoDimensionalRectArray[i, j] = new Paper($"Paper{i}_{j}", new Person(), DateTime.Now.AddDays(i + j));
+    }
+}
+Console.WriteLine($"прямоугольный 2D массив: {Environment.TickCount - startTime2} мс");
 
-        public Person()
+int startTime3 = Environment.TickCount;
+Paper[][] jaggedArray = new Paper[ROWS][];
+for (int i = 0; i < ROWS; i++)
+{
+    jaggedArray[i] = new Paper[COLS];
+    for (int j = 0; j < COLS; j++)
+    {
+        jaggedArray[i][j] = new Paper($"Paper{i}_{j}", new Person(), DateTime.Now.AddDays(i * j));
+    }
+}
+Console.WriteLine($"ступенчатый 2D массив: {Environment.TickCount - startTime3} мс");
+try
+{
+    int nrow, ncolumn;
+    Console.WriteLine("Введите количество строк и столбцов двумерного массива(Разделители: | /): ");
+    string s = Console.ReadLine();
+    string[] ans = s.Split('|').Length > s.Split('/').Length ? s.Split('|') : s.Split('/');
+    nrow = Convert.ToInt32(ans[0]);
+    ncolumn = Convert.ToInt32(ans[1]);
+    Random random = new Random();
+
+    startTime = Environment.TickCount;
+    Person[] mass1 = new Person[nrow * ncolumn];
+    for (int i = 0; i < nrow * ncolumn; i++)
+    {
+
+        mass1[i] = new Person($"P{i}", $"Surname{i}", (new DateTime(random.Next(1900, DateTime.Today.Year), random.Next(1, 12), random.Next(1, 28))));
+        Console.WriteLine(mass1[i]);
+    }
+    Console.WriteLine($"Время одномерного массива: {Environment.TickCount - startTime}");
+
+    startTime = Environment.TickCount;
+    Person[,] mass2 = new Person[nrow, ncolumn];
+    for (int i = 0; i < nrow; i++)
+    {
+        for (int j = 0; j < ncolumn; j++)
         {
-            this.name = "Bob";
-            this.surname = "Bobov";
-            this.dateOfBirth = DateTime.Now;
-        }
-
-        public Person(string name, string surname, DateTime dateOfBirth)
-        {
-            this.name = name;
-            this.surname = surname;
-            this.dateOfBirth = dateOfBirth;
-        }
-
-        public string Name { get => name; set => name = value == null ? "Bob" : value; }
-        public string Surname { get => surname; set => surname = value == null ? "Bobov" : value; }
-        public DateTime DateOfBirth { get => dateOfBirth; set => dateOfBirth = value; }
-
-        public int YearOfBirth
-        {
-            get => dateOfBirth.Year;
-            set => dateOfBirth = new DateTime(value, dateOfBirth.Month, dateOfBirth.Day);
-        }
-
-        public override string ToString()
-        {
-            return $"Имя: {name} , Фамилия: {surname}\nДата рождения: {dateOfBirth}";
-        }
-
-        public virtual string ToShortString()
-        {
-            return $"Имя: {name} , Фамилия: {surname}";
+            mass2[i, j] = new Person($"P{i}", $"Surname{i}", (new DateTime(random.Next(1900, DateTime.Today.Year), random.Next(1, 12), random.Next(1, 28))));
+            Console.WriteLine(mass2[i, j]);
         }
     }
+    Console.WriteLine($"Время двумерного массива: {Environment.TickCount - startTime}");
 
-    public enum TimeFrame { Year, TwoYears, Long }
-
-    class Paper
+    Person[][] mass3 = new Person[nrow][];
+    for (int i = 0; i < nrow; i++)
     {
-        public string Title { get; set; }
-        public Person Auth { get; set; }
-        public DateTime Date { get; set; }
-
-        public Paper()
+        Console.WriteLine($"Введите количество столбцов в {i} строке jagged массива: ");
+        mass3[i] = new Person[Convert.ToInt32(Console.ReadLine())];
+        startTime = Environment.TickCount;
+        for (int j = 0; j < mass3[i].Length; j++)
         {
-            this.Title = "Good";
-            this.Auth = new Person();
-            this.Date = new DateTime(1990, 3, 25);
+            mass3[i][j] = new Person($"P{i}", $"Surname{i}", (new DateTime(random.Next(1900, DateTime.Today.Year), random.Next(1, 12), random.Next(1, 28))));
+            Console.WriteLine(mass3[i][j]);
         }
-
-        public Paper(string Title, Person Auth, DateTime Date)
-        {
-            this.Title = Title;
-            this.Auth = Auth;
-            this.Date = Date;
-        }
-
-        public override string ToString()
-        {
-            return $"Title {this.Title}, Person {this.Auth}, DateTime {Date}";
-        }
+        Console.WriteLine($"Время jagged массива: {Environment.TickCount - startTime}");
     }
-
-    class ResearchTeam
-    {
-        public string title { get; set; }
-        public string name { get; set; }
-        public int RegNumber { get; set; }
-        public TimeFrame Info { get; set; }
-        private Paper[] mas;
-        public Paper[] Mas
-        {
-            get => mas;
-            set => mas = value;
-        }
-
-        public ResearchTeam()
-        {
-            this.title = null;
-            this.name = null;
-            this.RegNumber = 0;
-            this.mas = new Paper[0];
-        }
-
-        public ResearchTeam(string title, string name, int RegNumber, TimeFrame Info)
-        {
-            this.title = title;
-            this.name = name;
-            this.RegNumber = RegNumber;
-            this.Info = Info;
-            this.mas = new Paper[0];
-        }
-
-        public Paper LatestPaper
-        {
-            get
-            {
-                if (mas == null || mas.Length == 0) { return null; }
-                DateTime maxPublicationDate = mas.Max(p => p.Date);
-                foreach (Paper i in mas)
-                {
-                    if (i.Date == maxPublicationDate)
-                    {
-                        return i;
-                    }
-                }
-                return null;
-            }
-        }
-
-        public bool this[TimeFrame tf]
-        { get => tf == Info ? true : false; }
-
-        public void AddPapers(params Paper[] newPapers)
-        {
-            if (newPapers == null) return;
-
-            foreach (Paper i in newPapers)
-            {
-                Array.Resize(ref mas, mas.Length + 1);
-                mas[mas.Length - 1] = i;
-            }
-        }
-
-        public override string ToString()
-        {
-            string jj = $"title {title}, name {name}, RegNumber {RegNumber}, Info {Info}";
-            if (mas != null)
-            {
-                foreach (Paper i in mas)
-                {
-                    jj += i.ToString();
-                }
-            }
-            return jj;
-        }
-
-        public string ToShortString()
-        {
-            return $"title {title}, name {name}, RegNumber {RegNumber}, Info {Info}";
-        }
-    }
+}
+catch (Exception e)
+{
+    Console.WriteLine($"Ошибка {e.Message}");
+}
